@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "memorydelaysmtphandler"
+version = "1.0.0"
+authors = [
+  { name="void127001" },
+]
+description = "MemoryDelaySmtpHandler will create a bundle of events in an single email and sent it after a delay."
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/void127001/memorydelaysmtphandler"
+Issues = "https://github.com/void127001/memorydelaysmtphandler/issues"
