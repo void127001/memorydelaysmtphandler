@@ -8,7 +8,7 @@ import threading, sys, time, io
 
 __author__  = "void127001"
 __status__  = "production"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __date__    = "27 August 2024"
 __license__ = "LGPLv2.1"
 
