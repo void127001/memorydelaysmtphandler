@@ -4,7 +4,7 @@
 **memorydelaysmtphandler** adds new handlers for the Python logging package.
 
 Issue : SMTPHandler sends one email after each event. Multiple emails can be received in a short time.<br> 
-Improvement : MemoryDelaySmtpHandler will create a bundle of events in an single email and sent it after a delay.
+Improvement : MemoryDelaySmtpHandler will create a bundle of events in a single email and sent it after a delay.
 
 ## Features
 
@@ -30,7 +30,7 @@ $ python3 -m pip install memorydelaysmtphandler
 ## Using with OpenCanary
 
 logging.handlers.SMTPHandler sends one email after each alert. Multiple emails can be received in a short time.<br> 
-MemoryDelaySmtpHandler will create a bundle of alerts in an single email and sent it after a delay.
+MemoryDelaySmtpHandler will create a bundle of alerts in a single email and sent it after a delay.
 
 #### Installation for OpenCanary
 Install memorydelaysmtphandler in the OpenCanary environment.

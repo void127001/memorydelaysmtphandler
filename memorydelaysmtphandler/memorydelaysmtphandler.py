@@ -8,8 +8,8 @@ import threading, sys, time, io
 
 __author__  = "void127001"
 __status__  = "production"
-__version__ = "1.0.1"
-__date__    = "27 August 2024"
+__version__ = "1.0.2"
+__date__    = "29 August 2024"
 __license__ = "LGPLv2.1"
 
 
@@ -51,8 +51,8 @@ class MemoryDelayHandler(logging.handlers.MemoryHandler):
         self._barrier = threading.Barrier(2)
         #_thread_closing : request to close the _thread_auto_flush_buffer
         self._thread_closing = False
-        #_thread_auto_flush_buffer : this thread flushes the buffer after the delay
-        self._thread_auto_flush_buffer = threading.Thread(target=self._task_auto_flush_buffer)
+        #_thread_auto_flush_buffer : this thread flushes the buffer after the delay. Created on first emit() call.
+        self._thread_auto_flush_buffer = None
         #_append_buffer : during the flush, all the records will be appended to a single string buffer (required for SMTP) 
         self._append_buffer = False
 
@@ -61,8 +61,6 @@ class MemoryDelayHandler(logging.handlers.MemoryHandler):
         #_sync_backgroud_flush [lock] : request to make a synchronization between threads after a flush
         self._sync_backgroud_flush = False
 
-        #start the _thread_auto_flush_buffer thread
-        self._thread_auto_flush_buffer.start()
 
     def emit(self, record):
         """
@@ -70,6 +68,12 @@ class MemoryDelayHandler(logging.handlers.MemoryHandler):
         Send event _event_new_emit to _task_auto_flush_buffer thread.
         If a flush is processed by this main thread, then the _task_auto_flush_buffer is reset. 
         """
+
+        #Create and start the _thread_auto_flush_buffer thread on the first emit() call. 
+        #This fix the thread problem with twistd daemon. 
+        if (self._thread_auto_flush_buffer == None):
+            self._thread_auto_flush_buffer = threading.Thread(target=self._task_auto_flush_buffer)
+            self._thread_auto_flush_buffer.start()
 
         #emit() & flush() are processed with _lock_sync acquired, to synchronize the _task_auto_flush_buffer thread
         self._lock_sync.acquire() 
@@ -155,7 +159,8 @@ class MemoryDelayHandler(logging.handlers.MemoryHandler):
         self._event_new_emit.set()
         self._event_delay_flush.set()
         self._lock_sync.release()
-        self._thread_auto_flush_buffer.join()
+        if (self._thread_auto_flush_buffer != None):
+            self._thread_auto_flush_buffer.join()
         logging.handlers.MemoryHandler.close(self)
 
            
@@ -200,7 +205,7 @@ class MemoryDelaySmtpHandler(MemoryDelayHandler):
     """
     A handler class which sends an SMTP email for a logging events bundle after a delay.
     MemoryDelaySmtpHandler class adds an auto-flush delay to logging.handlers.SMTPHandler.
-    MemoryDelaySmtpHandler will create a bundle of events in an single email and sent it after a delay.
+    MemoryDelaySmtpHandler will create a bundle of events in a single email and sent it after a delay.
     """
     def __init__(self, mailhost, fromaddr, toaddrs, subject,
                  credentials=None, secure=None, timeout=5.0, capacity=32, delay=10.0, flushLevel=logging.CRITICAL):

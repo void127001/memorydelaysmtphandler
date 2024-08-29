@@ -11,8 +11,8 @@ import logging, logging.handlers
 import io, time
 
 __author__  = "void127001"
-__version__ = "1.0.1"
-__date__    = "27 August 2024"
+__version__ = "1.0.2"
+__date__    = "29 August 2024"
 
 
 

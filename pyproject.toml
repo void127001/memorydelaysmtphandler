@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "memorydelaysmtphandler"
-version = "1.0.1"
+version = "1.0.2"
 authors = [
   { name="void127001" },
 ]
-description = "MemoryDelaySmtpHandler will create a bundle of events in an single email and sent it after a delay."
+description = "MemoryDelaySmtpHandler will create a bundle of events in a single email and sent it after a delay."
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
